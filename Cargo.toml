@@ -1,7 +1,13 @@
 [package]
 name = "rand_dev"
 version = "0.1.0"
+license = "MIT OR Apache-2.0"
 edition = "2021"
+
+description = "Reproducible randomness source for tests"
+categories = ["development-tools", "development-tools::debugging", "development-tools::testing"]
+keywords = ["tests", "reproducibility", "rand"]
+repository = "https://github.com/survived/rand_dev"
 
 [dependencies]
 rand_core = { version = "0.6", features = ["std"] }
