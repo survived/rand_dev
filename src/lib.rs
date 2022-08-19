@@ -1,12 +1,14 @@
-//! Reproducible randomness source for tests
+//! # Reproducible randomness source for tests
 //!
-//! Having reproducible tests helps debugging problems that have probabilistic nature. This library
-//! provides a random numbers generator [`Rng`] compatible with [`rand`] crate (it implements [`Rng`],
+//! Having reproducible tests helps debugging problems that have probabilistic nature. This library provides
+//! a random numbers generator [`DevRng`] compatible with [`rand`] crate (it implements [`Rng`],
 //! [`RngCore`], [`SeedableRng`] traits). When generator is constructed, its seed is printed to stdout.
 //! You can override a seed by setting `RUST_TESTS_SEED` env variable. Same seed leads to same randomness
 //! generated across all platforms.
 //!
 //! [`Rng`]: rand::Rng
+//! [`RngCore`]: rand::RngCore
+//! [`SeedableRng`]: rand::SeedableRng
 //!
 //! ## Usage
 //! Reproducible source of randomness can be added in one line:
