@@ -1,0 +1,19 @@
+[package]
+name = "rand_dev"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rand_core = { version = "0.6", features = ["std"] }
+rand_chacha = "0.3"
+hex = "0.4"
+
+# We specify this dependency purely to resolve a link for `cargo doc --feature __docs`
+rand = { version = "0.8", optional = true }
+
+[features]
+default = []
+__docs = ["rand"]
+
+[package.metadata.docs.rs]
+features = ["__docs"]
