@@ -81,7 +81,7 @@ impl DevRng {
             }
             Err(std::env::VarError::NotPresent) => OsRng.fill_bytes(&mut seed),
         }
-        println!("Tests seed: {}", hex::encode(seed));
+        println!("RUST_TESTS_SEED={}", hex::encode(seed));
 
         DevRng(ChaCha8Rng::from_seed(seed))
     }
