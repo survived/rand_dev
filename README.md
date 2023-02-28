@@ -2,20 +2,13 @@
 [![Docs](https://docs.rs/rand_dev/badge.svg)](https://docs.rs/rand_dev)
 [![Crates io](https://img.shields.io/crates/v/rand_dev.svg)](https://crates.io/crates/rand_dev)
 
-<!-- run `cargo rdme` to regenerate a block below: -->
-<!-- cargo-rdme start -->
-
 # Reproducible randomness source for tests
 
 Having reproducible tests helps debugging problems that have probabilistic nature. This library provides
-a random numbers generator [`DevRng`] compatible with [`rand`] crate (it implements [`Rng`],
-[`RngCore`], [`SeedableRng`] traits). When generator is constructed, its seed is printed to stdout.
-You can override a seed by setting `RUST_TESTS_SEED` env variable. Same seed leads to same randomness
-generated across all platforms.
-
-[`Rng`]: rand::Rng
-[`RngCore`]: rand::RngCore
-[`SeedableRng`]: rand::SeedableRng
+a random numbers generator `DevRng` compatible with [`rand`] crate (it implements `Rng`, `RngCore`, 
+`SeedableRng` traits). When generator is constructed, its seed is printed to stdout. You can override a 
+seed by setting `RUST_TESTS_SEED` env variable. Same seed leads to same randomness generated across all 
+platforms.
 
 ## Usage
 Reproducible source of randomness can be added in one line:
@@ -43,7 +36,7 @@ test tests::it_works ... FAILED
 failures:
 
 ---- tests::it_works stdout ----
-Tests seed: cab4ab5c8471fa03691bb86d96c2febeb9b1099a78d164e8addbe7f83d107c78
+RUST_TESTS_SEED=cab4ab5c8471fa03691bb86d96c2febeb9b1099a78d164e8addbe7f83d107c78
 thread 'tests::it_works' panicked at 'assertion failed: rng.gen_range(0..=10) < 10', src/lib.rs:9:9
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 
@@ -60,17 +53,14 @@ $ export RUST_TESTS_SEED=cab4ab5c8471fa03691bb86d96c2febeb9b1099a78d164e8addbe7f
 $ cargo test
 ```
 
-<!-- cargo-rdme end -->
-
-[`DevRng`]: https://docs.rs/rand_dev/latest/rand_dev/struct.DevRng.html
 [`rand`]: https://docs.rs/rand
 
 ## License
 
 Licensed under either of
 
- * Apache License, Version 2.0, ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
- * MIT license ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
+ * Apache License, Version 2.0
+ * MIT license
 
 at your option.
 
