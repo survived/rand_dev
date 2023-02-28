@@ -1,57 +1,4 @@
-//! # Reproducible randomness source for tests
-//!
-//! Having reproducible tests helps debugging problems that have probabilistic nature. This library provides
-//! a random numbers generator [`DevRng`] compatible with [`rand`] crate (it implements [`Rng`],
-//! [`RngCore`], [`SeedableRng`] traits). When generator is constructed, its seed is printed to stdout.
-//! You can override a seed by setting `RUST_TESTS_SEED` env variable. Same seed leads to same randomness
-//! generated across all platforms.
-//!
-//! [`Rng`]: rand::Rng
-//! [`RngCore`]: rand::RngCore
-//! [`SeedableRng`]: rand::SeedableRng
-//!
-//! ## Usage
-//! Reproducible source of randomness can be added in one line:
-//!
-//! ```rust,ignore
-//! use rand::Rng;
-//! use rand_dev::DevRng;
-//!
-//! #[test]
-//! fn it_works() {
-//!     let mut rng = DevRng::new();
-//!     assert!(rng.gen_range(0..=10) < 10);
-//! }
-//! ```
-//!
-//! Then if test fails, you can observe seed of randomness generator in stdout:
-//! ```text
-//! $ cargo test
-//!     Finished test [unoptimized + debuginfo] target(s) in 0.00s
-//!      Running unittests (target/debug/deps/simple_usage-592d47155d40d1f7)
-//!
-//! running 1 test
-//! test tests::it_works ... FAILED
-//!
-//! failures:
-//!
-//! ---- tests::it_works stdout ----
-//! Tests seed: cab4ab5c8471fa03691bb86d96c2febeb9b1099a78d164e8addbe7f83d107c78
-//! thread 'tests::it_works' panicked at 'assertion failed: rng.gen_range(0..=10) < 10', src/lib.rs:9:9
-//! note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-//!
-//!
-//! failures:
-//!     tests::it_works
-//!
-//! test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
-//! ```
-//!
-//! Now you can fix the seed by setting env variable to reproduce and debug a failing test:
-//! ```text
-//! $ export RUST_TESTS_SEED=cab4ab5c8471fa03691bb86d96c2febeb9b1099a78d164e8addbe7f83d107c78
-//! $ cargo test
-//! ```
+#![doc = include_str!("../README.md")]
 
 use rand_chacha::ChaCha8Rng;
 use rand_core::{CryptoRng, OsRng, RngCore, SeedableRng};
@@ -81,14 +28,29 @@ impl DevRng {
             }
             Err(std::env::VarError::NotPresent) => OsRng.fill_bytes(&mut seed),
         }
-        println!("Tests seed: {}", hex::encode(seed));
+        println!("RUST_TESTS_SEED={}", hex::encode(seed));
 
         DevRng(ChaCha8Rng::from_seed(seed))
+    }
+
+    /// Derives another randomness generator from this instance
+    ///
+    /// Uses `self` to generate a seed and constructs a new instance of `DevRng` from the seed.
+    pub fn fork(&mut self) -> Self {
+        let mut seed = [0u8; 32];
+        self.fill_bytes(&mut seed);
+        Self::from_seed(seed)
     }
 
     /// Retrieves generator seed
     pub fn get_seed(&self) -> [u8; 32] {
         self.0.get_seed()
+    }
+}
+
+impl Default for DevRng {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
