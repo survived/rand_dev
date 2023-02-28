@@ -86,6 +86,15 @@ impl DevRng {
         DevRng(ChaCha8Rng::from_seed(seed))
     }
 
+    /// Derives another randomness generator from this instance
+    ///
+    /// Uses `self` to generate a seed and constructs a new instance of `DevRng` from the seed.
+    pub fn fork(&mut self) -> Self {
+        let mut seed = [0u8; 32];
+        self.fill_bytes(&mut seed);
+        Self::from_seed(seed)
+    }
+
     /// Retrieves generator seed
     pub fn get_seed(&self) -> [u8; 32] {
         self.0.get_seed()
