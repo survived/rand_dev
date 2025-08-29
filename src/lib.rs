@@ -36,6 +36,9 @@ impl DevRng {
     /// Derives another randomness generator from this instance
     ///
     /// Uses `self` to generate a seed and constructs a new instance of `DevRng` from the seed.
+    ///
+    /// May be useful when you have several threads/futures/places where you need access the
+    /// randomness generation, but you don't want to mess with ownership system.
     pub fn fork(&mut self) -> Self {
         let mut seed = [0u8; 32];
         self.fill_bytes(&mut seed);
