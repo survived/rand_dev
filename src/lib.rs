@@ -16,7 +16,7 @@ impl DevRng {
     /// Constructs randomness generator
     ///
     /// Reads a seed from env variable `RUST_TESTS_SEED` or generates a random seed if env variable is not set.
-    /// Prints seed to stdout.
+    /// Prints seed to stderr.
     ///
     /// Panics if `RUST_TESTS_SEED` contains invalid value.
     #[track_caller]
@@ -32,7 +32,7 @@ impl DevRng {
                 .try_fill_bytes(&mut seed)
                 .expect("system randomness unavailable"),
         }
-        println!("RUST_TESTS_SEED={}", const_hex::encode(seed));
+        eprintln!("RUST_TESTS_SEED={}", const_hex::encode(seed));
 
         DevRng(ChaCha8Rng::from_seed(seed))
     }

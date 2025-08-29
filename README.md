@@ -6,7 +6,7 @@
 
 Having reproducible tests helps debugging problems that have probabilistic nature. This library provides
 a random numbers generator `DevRng` compatible with [`rand`] crate (it implements `Rng`, `RngCore`, 
-`SeedableRng` traits). When generator is constructed, its seed is printed to stdout. You can override a 
+`SeedableRng` traits). When generator is constructed, its seed is printed to stderr. You can override a 
 seed by setting `RUST_TESTS_SEED` env variable. Same seed leads to same randomness generated across all 
 platforms.
 
@@ -24,7 +24,7 @@ fn it_works() {
 }
 ```
 
-Then if test fails, you can observe seed of randomness generator in stdout:
+Then if test fails, you can observe seed of randomness generator in captured stderr:
 ```text
 $ cargo test
     Finished test [unoptimized + debuginfo] target(s) in 0.00s
