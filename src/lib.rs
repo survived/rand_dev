@@ -1,7 +1,7 @@
 #![doc = include_str!("../README.md")]
 
 use rand_chacha::ChaCha8Rng;
-use rand_core::{CryptoRng, OsRng, RngCore, SeedableRng};
+use rand_core::{CryptoRng, OsRng, RngCore, SeedableRng, TryRngCore};
 
 /// Reproducible random generator for tests
 #[derive(Debug, Clone)]
@@ -26,7 +26,9 @@ impl DevRng {
             Err(std::env::VarError::NotUnicode(_)) => {
                 panic!("provided seed is not a valid unicode")
             }
-            Err(std::env::VarError::NotPresent) => OsRng.fill_bytes(&mut seed),
+            Err(std::env::VarError::NotPresent) => OsRng
+                .try_fill_bytes(&mut seed)
+                .expect("system randomness unavailable"),
         }
         println!("RUST_TESTS_SEED={}", hex::encode(seed));
 
@@ -69,10 +71,6 @@ impl RngCore for DevRng {
     fn fill_bytes(&mut self, dest: &mut [u8]) {
         self.0.fill_bytes(dest)
     }
-
-    fn try_fill_bytes(&mut self, dest: &mut [u8]) -> Result<(), rand_core::Error> {
-        self.0.try_fill_bytes(dest)
-    }
 }
 
 impl SeedableRng for DevRng {
@@ -86,12 +84,20 @@ impl SeedableRng for DevRng {
         DevRng(ChaCha8Rng::seed_from_u64(state))
     }
 
-    fn from_rng<R: RngCore>(rng: R) -> Result<Self, rand_core::Error> {
-        ChaCha8Rng::from_rng(rng).map(DevRng)
+    fn from_rng(rng: &mut impl RngCore) -> Self {
+        Self(ChaCha8Rng::from_rng(rng))
     }
 
-    fn from_entropy() -> Self {
-        DevRng(ChaCha8Rng::from_entropy())
+    fn try_from_rng<R: TryRngCore>(rng: &mut R) -> Result<Self, R::Error> {
+        ChaCha8Rng::try_from_rng(rng).map(Self)
+    }
+
+    fn from_os_rng() -> Self {
+        Self(ChaCha8Rng::from_os_rng())
+    }
+
+    fn try_from_os_rng() -> Result<Self, getrandom::Error> {
+        ChaCha8Rng::try_from_os_rng().map(Self)
     }
 }
 
