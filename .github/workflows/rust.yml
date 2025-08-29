@@ -9,19 +9,23 @@ on:
 env:
   CARGO_TERM_COLOR: always
   CARGO_NET_GIT_FETCH_WITH_CLI: true
+  RUSTFLAGS: -D warnings
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: Swatinem/rust-cache@v2
       with:
         cache-on-failure: "true"
-    - name: Build
-      run: cargo build
+    - name: Check
+      run: cargo check
     - name: Run tests
       run: cargo test
+    - name: Check example
+      # note: if ran `cargo test`, it intentionally fails with 1/10 probability
+      run: (cd examples/simple_usage; cargo check --tests)
     - name: Check formatting
       run: cargo fmt --all -- --check
     - name: Run clippy
