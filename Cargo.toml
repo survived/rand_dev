@@ -13,7 +13,7 @@ repository = "https://github.com/survived/rand_dev"
 rand_core = { version = "0.9", features = ["os_rng"] }
 rand_chacha = "0.9"
 getrandom = { version = "0.3", default-features = false }
-hex = "0.4"
+const-hex = { version = "1", default-features = false, features = ["alloc"] }
 
 [dev-dependencies]
 rand = "0.9"

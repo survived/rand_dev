@@ -18,7 +18,7 @@ fn reproducibility() {
     // SAFETY: setting/removing env vars is safe in single-threaded programs. Since there's
     // only one test, this is safe to do.
     unsafe {
-        std::env::set_var(VAR_NAME, hex::encode(rng1.get_seed()));
+        std::env::set_var(VAR_NAME, const_hex::encode(rng1.get_seed()));
     }
     let mut rng3 = DevRng::new();
     assert_eq!(rng1.get_seed(), rng3.get_seed());

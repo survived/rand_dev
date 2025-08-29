@@ -20,9 +20,8 @@ impl DevRng {
     pub fn new() -> Self {
         let mut seed = [0u8; 32];
         match std::env::var(Self::VAR_NAME) {
-            Ok(provided_seed) => {
-                hex::decode_to_slice(provided_seed, &mut seed).expect("provided seed is not valid")
-            }
+            Ok(provided_seed) => const_hex::decode_to_slice(provided_seed, &mut seed)
+                .expect("provided seed is not valid"),
             Err(std::env::VarError::NotUnicode(_)) => {
                 panic!("provided seed is not a valid unicode")
             }
@@ -30,7 +29,7 @@ impl DevRng {
                 .try_fill_bytes(&mut seed)
                 .expect("system randomness unavailable"),
         }
-        println!("RUST_TESTS_SEED={}", hex::encode(seed));
+        println!("RUST_TESTS_SEED={}", const_hex::encode(seed));
 
         DevRng(ChaCha8Rng::from_seed(seed))
     }
