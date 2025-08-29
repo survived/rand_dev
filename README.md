@@ -55,6 +55,9 @@ $ cargo test
 
 [`rand`]: https://docs.rs/rand
 
+## Features
+* `rand-v09` _(disabled by default)_ when enabled, library re-exports `rand v0.9` which will be accessible as `rand_dev::rand`.
+
 ## License
 
 Licensed under either of

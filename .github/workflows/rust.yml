@@ -21,6 +21,8 @@ jobs:
         cache-on-failure: "true"
     - name: Check
       run: cargo check
+    - name: Check with rand v0.9
+      run: cargo check --features rand-v09
     - name: Run tests
       run: cargo test
     - name: Check example

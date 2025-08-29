@@ -1,5 +1,8 @@
 #![doc = include_str!("../README.md")]
 
+#[cfg(feature = "rand-v09")]
+pub use rand;
+
 use rand_chacha::ChaCha8Rng;
 use rand_core::{CryptoRng, OsRng, RngCore, SeedableRng, TryRngCore};
 
