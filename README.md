@@ -36,7 +36,7 @@ test tests::it_works ... FAILED
 failures:
 
 ---- tests::it_works stdout ----
-RUST_TESTS_SEED=cab4ab5c8471fa03691bb86d96c2febeb9b1099a78d164e8addbe7f83d107c78
+RUST_TESTS_SEED=fa48105a3c2ada139e0aa234f235a7af5c766cac4daefca97b57d73915c5b736
 thread 'tests::it_works' panicked at 'assertion failed: rng.gen_range(0..=10) < 10', src/lib.rs:9:9
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 
