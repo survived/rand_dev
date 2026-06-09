@@ -1,3 +1,9 @@
+## v0.3.0
+* BREAKING: update rand_core dep to latest `v0.10`. Replace the optional
+  `rand-v09` feature and re-export with `rand-v10`
+
+See [#5](https://github.com/survived/rand_dev/pull/5)
+
 ## v0.2.0
 * BREAKING: update rand_core dep to latest `v0.9`
 * POSSIBLY BREAKING: the seed is now printed to stderr instead of stdout

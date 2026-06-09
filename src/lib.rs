@@ -1,10 +1,11 @@
 #![doc = include_str!("../README.md")]
 
-#[cfg(feature = "rand-v09")]
+#[cfg(feature = "rand-v10")]
 pub use rand;
 
+use getrandom::SysRng;
 use rand_chacha::ChaCha8Rng;
-use rand_core::{CryptoRng, OsRng, RngCore, SeedableRng, TryRngCore};
+use rand_core::{Rng, SeedableRng, TryRng};
 
 /// Reproducible random generator for tests
 #[derive(Debug, Clone)]
@@ -28,7 +29,7 @@ impl DevRng {
             Err(std::env::VarError::NotUnicode(_)) => {
                 panic!("provided seed is not a valid unicode")
             }
-            Err(std::env::VarError::NotPresent) => OsRng
+            Err(std::env::VarError::NotPresent) => SysRng
                 .try_fill_bytes(&mut seed)
                 .expect("system randomness unavailable"),
         }
@@ -61,17 +62,19 @@ impl Default for DevRng {
     }
 }
 
-impl RngCore for DevRng {
-    fn next_u32(&mut self) -> u32 {
-        self.0.next_u32()
+impl TryRng for DevRng {
+    type Error = std::convert::Infallible;
+
+    fn try_next_u32(&mut self) -> Result<u32, Self::Error> {
+        self.0.try_next_u32()
     }
 
-    fn next_u64(&mut self) -> u64 {
-        self.0.next_u64()
+    fn try_next_u64(&mut self) -> Result<u64, Self::Error> {
+        self.0.try_next_u64()
     }
 
-    fn fill_bytes(&mut self, dest: &mut [u8]) {
-        self.0.fill_bytes(dest)
+    fn try_fill_bytes(&mut self, dst: &mut [u8]) -> Result<(), Self::Error> {
+        self.0.try_fill_bytes(dst)
     }
 }
 
@@ -86,21 +89,21 @@ impl SeedableRng for DevRng {
         DevRng(ChaCha8Rng::seed_from_u64(state))
     }
 
-    fn from_rng(rng: &mut impl RngCore) -> Self {
+    fn from_rng<R: Rng + ?Sized>(rng: &mut R) -> Self {
         Self(ChaCha8Rng::from_rng(rng))
     }
 
-    fn try_from_rng<R: TryRngCore>(rng: &mut R) -> Result<Self, R::Error> {
+    fn try_from_rng<R: TryRng + ?Sized>(rng: &mut R) -> Result<Self, R::Error> {
         ChaCha8Rng::try_from_rng(rng).map(Self)
     }
 
-    fn from_os_rng() -> Self {
-        Self(ChaCha8Rng::from_os_rng())
+    fn fork(&mut self) -> Self {
+        self.fork()
     }
 
-    fn try_from_os_rng() -> Result<Self, getrandom::Error> {
-        ChaCha8Rng::try_from_os_rng().map(Self)
+    fn try_fork(&mut self) -> Result<Self, std::convert::Infallible> {
+        Ok(self.fork())
     }
 }
 
-impl CryptoRng for DevRng {}
+impl rand_core::TryCryptoRng for DevRng {}

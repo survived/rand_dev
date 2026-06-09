@@ -1,6 +1,6 @@
 [package]
 name = "rand_dev"
-version = "0.2.0"
+version = "0.3.0"
 license = "MIT OR Apache-2.0"
 edition = "2024"
 
@@ -10,17 +10,17 @@ keywords = ["tests", "reproducibility", "rand"]
 repository = "https://github.com/survived/rand_dev"
 
 [dependencies]
-rand_core = { version = "0.9", features = ["os_rng"] }
-rand_chacha = "0.9"
-getrandom = { version = "0.3", default-features = false }
+rand_core = { version = "0.10" }
+rand_chacha = "0.10"
+getrandom = { version = "0.4.2", default-features = false, features = ["sys_rng"] }
 const-hex = { version = "1", default-features = false, features = ["alloc"] }
 
-rand = { version = "0.9", optional = true }
+rand = { version = "0.10", optional = true }
 
 [dev-dependencies]
-rand = "0.9"
+rand = "0.10"
 
 [features]
 default = []
 
-rand-v09 = ["dep:rand"]
+rand-v10 = ["dep:rand"]
