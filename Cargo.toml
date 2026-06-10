@@ -23,4 +23,4 @@ rand = "0.10"
 [features]
 default = []
 
-rand-v10 = ["dep:rand"]
+rand-v010 = ["dep:rand"]

@@ -1,6 +1,6 @@
 #![doc = include_str!("../README.md")]
 
-#[cfg(feature = "rand-v10")]
+#[cfg(feature = "rand-v010")]
 pub use rand;
 
 use getrandom::SysRng;
