@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use rand_dev::{DevRng, rand::Rng};
+    use rand_dev::{DevRng, rand::RngExt};
 
     #[test]
     fn it_works() {

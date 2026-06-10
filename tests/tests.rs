@@ -1,4 +1,4 @@
-use rand_core::RngCore;
+use rand_core::Rng;
 use rand_dev::DevRng;
 
 const VAR_NAME: &str = "RUST_TESTS_SEED";
